@@ -216,13 +216,15 @@ class ModelScratch(object):
         self.__n = 10
         self.__d_in = 1
         self.__d_out = 1
+        self.__lr = 0.01
+        self.__epochs = 200
         self.__x = torch.randn(self.__n,self.__d_in)
         self.__w_true = torch.tensor([[2.0]])
         self.__b_true = torch.tensor(1.0)
         self.__y_true = self.__x @ self.__w_true + self.__b_true + torch.randn(self.__n,self.__d_out) * 0.1
         self.__w = torch.randn(self.__d_in,self.__d_out,requires_grad=True)
         self.__b = torch.randn(1,requires_grad=True)
-        log.info(f"n={self.__n} | d_in={self.__d_in} | d_out={self.__d_out}")
+        log.info(f"n={self.__n} | d_in={self.__d_in} | d_out={self.__d_out} | lr={self.__lr} | epochs={self.__epochs}")
         tensor_log(self.__x,"     <x> ")
         tensor_log(self.__w_true,"<w_true> ")
         tensor_log(self.__b_true,"<b_true> ")
@@ -231,43 +233,24 @@ class ModelScratch(object):
         tensor_log(self.__b,"     <b> ")
 
 # }}}
-# {{{ ModelScratch.forward_pass()
-
-    def forward_pass(self):
-        log.info("==== ModelScratch.forward_pass() ====")
-        y_hat = self.__x @ self.__w + self.__b
-        tensor_log(y_hat," <y_hat> ")
-        return y_hat
-
-# }}}
-# {{{ ModelScratch.loss()
-
-    def loss(self,y_hat):
-        log.info("==== ModelScratch.loss() ====")
-        err = y_hat - self.__y_true
-        sq_err = err ** 2
-        loss = sq_err.mean()
-        tensor_log(err,"   <err> ")
-        tensor_log(sq_err,"<sq_err> ")
-        tensor_log(loss,"  <loss> ")
-        return loss
-
-# }}}
-# {{{ ModelScratch.backward()
-
-    def backward(self,loss):
-        log.info("==== ModelScratch.backward() ====")
-        loss.backward()  # calcs ".grad"
-        tensor_log(self.__w.grad,"<w.grad> ")
-        tensor_log(self.__b.grad,"<b.grad> ")
-
-# }}}
 # {{{ ModelScratch.run()
 
     def run(self):
-        y_hat = self.forward_pass()
-        loss = self.loss(y_hat)
-        self.backward(loss)
+        log.info("==== ModelScratch.run() ====")
+        for epoch in range(self.__epochs):
+            y_hat = self.__x @ self.__w + self.__b
+            err = y_hat - self.__y_true
+            sq_err = err ** 2
+            loss = sq_err.mean()
+            loss.backward()  # calcs ".grad"
+            with torch.no_grad():
+                self.__w -= self.__lr * self.__w.grad
+                self.__b -= self.__lr * self.__b.grad
+            self.__w.grad.zero_()
+            self.__b.grad.zero_()
+            log.info(f"epoch={epoch:03d} | loss={loss.item():.4f} | w={self.__w.item()} | b={self.__b.item()}")
+        log.info(f"final: w={self.__w.item()} | b={self.__b.item()}")
+        log.info(f" true: w={self.__w_true.item()} | b={self.__b_true.item()}")
 
 # }}}
 # -------- main --------
