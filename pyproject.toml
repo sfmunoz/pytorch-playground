@@ -1,0 +1,6 @@
+[project]
+name = "pytorch-playground"
+version = "0.1.0"
+description = "PyTorch playground"
+requires-python = ">=3.14"
+dependencies = []
