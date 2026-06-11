@@ -15,9 +15,9 @@ log = getLogger(__name__)
 # -------- functions --------
 # {{{ tensor_log()
 
-def tensor_log(tensor,p="<tensor> ",f=log.info):
-    f(p + f"shape={tensor.shape} | dtype={tensor.dtype} | device={tensor.device} | requires_grad={tensor.requires_grad} | grad_fn={tensor.grad_fn}")
-    for x in str(tensor).split("\n"):
+def tensor_log(t,p="<tensor> ",f=log.info):
+    f(p + f"shape={t.shape} | dtype={t.dtype} | device={t.device} | requires_grad={t.requires_grad} | grad_fn={t.grad_fn}")
+    for x in str(t).split("\n"):
         f(p + x)
 
 # }}}
