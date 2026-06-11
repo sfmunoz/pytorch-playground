@@ -16,7 +16,7 @@ log = getLogger(__name__)
 # {{{ tensor_log()
 
 def tensor_log(tensor,p="<tensor> ",f=log.info):
-    f(p + f"shape={tensor.shape} | dtype={tensor.dtype} | device={tensor.device}")
+    f(p + f"shape={tensor.shape} | dtype={tensor.dtype} | device={tensor.device} | requires_grad={tensor.requires_grad}")
     for x in str(tensor).split("\n"):
         f(p + x)
 
@@ -73,6 +73,34 @@ class TensorCreation(object):
         self.from_template()
 
 # }}}
+# -------- Autograd(object) -- class -- Automatic Differentiation (requires_grad=True, data -> parameter) --------
+# {{{ Autograd -- class
+
+class Autograd(object):
+
+# }}}
+# {{{ Autograd.__init__()
+
+    def __init__(self,args):
+        self.__args = args
+
+# }}}
+# {{{ Autograd.data_vs_param()
+
+    def data_vs_param(self):
+        log.info("==== Autograd.data_vs_param() ====")
+        x_data = torch.tensor([[1.,2.],[3.,4.]])
+        w = torch.tensor([[1.0],[2.0]], requires_grad=True)
+        tensor_log(x_data,"<x_data> ")
+        tensor_log(w,"     <w> ")
+
+# }}}
+# {{{ Autograd.run()
+
+    def run(self):
+        self.data_vs_param()
+
+# }}}
 # -------- main --------
 # {{{ main
 
@@ -92,5 +120,6 @@ if __name__ == "__main__":
         log.setLevel(DEBUG)
 
     TensorCreation(args).run()
+    Autograd(args).run()
 
 # }}}
