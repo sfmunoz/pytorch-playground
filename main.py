@@ -237,12 +237,27 @@ class ModelScratch(object):
         log.info("==== ModelScratch.forward_pass() ====")
         y_hat = self.__x @ self.__w + self.__b
         tensor_log(y_hat," <y_hat> ")
+        return y_hat
+
+# }}}
+# {{{ ModelScratch.loss()
+
+    def loss(self,y_hat):
+        log.info("==== ModelScratch.loss() ====")
+        err = y_hat - self.__y_true
+        sq_err = err ** 2
+        loss = sq_err.mean()
+        tensor_log(err,"   <err> ")
+        tensor_log(sq_err,"<sq_err> ")
+        tensor_log(loss,"  <loss> ")
+        return loss
 
 # }}}
 # {{{ ModelScratch.run()
 
     def run(self):
-        self.forward_pass()
+        y_hat = self.forward_pass()
+        self.loss(y_hat)
 
 # }}}
 # -------- main --------
