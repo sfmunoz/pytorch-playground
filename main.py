@@ -180,6 +180,18 @@ class Operators(object):
         tensor_log(m1,"<m1> ")
 
 # }}}
+# {{{ Operators.gather()
+
+    def gather(self):
+        log.info("==== Operators.gather() ====")
+        x = torch.tensor([[10,11,12,13],[20,21,22,23],[30,31,32,33]])
+        i = torch.tensor([[2],[0],[3]])
+        v = torch.gather(x,dim=1,index=i)
+        tensor_log(x,"<x> ")
+        tensor_log(i,"<i> ")
+        tensor_log(v,"<v> ")
+
+# }}}
 # {{{ Operators.run()
 
     def run(self):
@@ -187,6 +199,7 @@ class Operators(object):
         self.reduction()
         self.indexing()
         self.argmax()
+        self.gather()
 
 # }}}
 # -------- main --------
