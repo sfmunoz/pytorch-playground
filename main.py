@@ -168,12 +168,25 @@ class Operators(object):
         tensor_log(col2,"<col2> ")
 
 # }}}
+# {{{ Operators.argmax()
+
+    def argmax(self):
+        log.info("==== Operators.argmax() ====")
+        x = torch.tensor([[10,0,5,20,1],[1,30,2,5,0]])
+        m0 = torch.argmax(x,dim=0)
+        m1 = torch.argmax(x,dim=1)
+        tensor_log(x," <x> ")
+        tensor_log(m0,"<m0> ")
+        tensor_log(m1,"<m1> ")
+
+# }}}
 # {{{ Operators.run()
 
     def run(self):
         self.star_vs_at()
         self.reduction()
         self.indexing()
+        self.argmax()
 
 # }}}
 # -------- main --------
