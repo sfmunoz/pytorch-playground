@@ -118,6 +118,38 @@ class Autograd(object):
         self.add_mult_graph()
 
 # }}}
+# -------- Operators(object) -- class --------
+# {{{ Operators -- class
+
+class Operators(object):
+
+# }}}
+# {{{ Operators.__init__()
+
+    def __init__(self,args):
+        self.__args = args
+
+# }}}
+# {{{ Operators.star_vs_at()
+
+    def star_vs_at(self):
+        log.info("==== Operators.star_vs_at() ====")
+        a = torch.tensor([[1,2],[3,4]])
+        b = torch.tensor([[5,6],[7,8]])
+        star = a * b
+        at = a @ b
+        tensor_log(a,"   <a> ")
+        tensor_log(b,"   <b> ")
+        tensor_log(star,"<star> ")
+        tensor_log(at,"  <at> ")
+
+# }}}
+# {{{ Operators.run()
+
+    def run(self):
+        self.star_vs_at()
+
+# }}}
 # -------- main --------
 # {{{ main
 
@@ -138,5 +170,6 @@ if __name__ == "__main__":
 
     TensorCreation(args).run()
     Autograd(args).run()
+    Operators(args).run()
 
 # }}}
