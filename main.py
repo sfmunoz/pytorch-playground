@@ -144,10 +144,25 @@ class Operators(object):
         tensor_log(at,"  <at> ")
 
 # }}}
+# {{{ Operators.reduction()
+
+    def reduction(self):
+        log.info("==== Operators.reduction() ====")
+        scores = torch.tensor([[10.,20.,30.],[5.,10.,15.]])
+        mean = scores.mean()
+        mean0 = scores.mean(dim=0)
+        mean1 = scores.mean(dim=1)
+        tensor_log(scores,"<scores> ")
+        tensor_log(mean,"  <mean> ")
+        tensor_log(mean0," <mean0> ")
+        tensor_log(mean1," <mean1> ")
+
+# }}}
 # {{{ Operators.run()
 
     def run(self):
         self.star_vs_at()
+        self.reduction()
 
 # }}}
 # -------- main --------
