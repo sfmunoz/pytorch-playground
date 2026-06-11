@@ -4,6 +4,7 @@
 # {{{ imports
 
 import sys
+import torch
 from argparse import ArgumentParser
 
 from logging import getLogger, basicConfig, INFO
@@ -20,14 +21,47 @@ class TensorCreation(object):
 # {{{ TensorCreation.__init__()
 
     def __init__(self,args):
-        log.info("TensorCreation.__init__()")
         self.__args = args
+
+# }}}
+# {{{ TensorCreation.from_data()
+
+    def from_data(self):
+        log.info("TensorCreation.from_data()")
+        data = [[1,2,3],[4,5,6]]
+        my_tensor = torch.tensor(data)
+        log.info(f"my_tensor: {my_tensor}")
+
+# }}}
+# {{{ TensorCreation.from_shape()
+
+    def from_shape(self):
+        log.info("TensorCreation.from_shape()")
+        shape = (2,3)
+        ones = torch.ones(shape)
+        zeros = torch.zeros(shape)
+        random = torch.randn(shape)
+        log.info(f"ones ..... {ones}")
+        log.info(f"zeros .... {zeros}")
+        log.info(f"random ... {random}")
+
+# }}}
+# {{{ TensorCreation.from_template()
+
+    def from_template(self):
+        log.info("TensorCreation.from_template()")
+        template = torch.tensor([[1,2],[3,4]])
+        my_tensor = torch.rand_like(template, dtype=torch.float)
+        log.info(f"template .... {template}")
+        log.info(f"my_tensor ... {my_tensor}")
 
 # }}}
 # {{{ TensorCreation.run()
 
     def run(self):
-        log.info("TensorCreation.run()")
+        self.from_data()
+        self.from_shape()
+        self.from_template()
 
 # }}}
 # -------- main --------
