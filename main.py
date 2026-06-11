@@ -106,7 +106,7 @@ class Autograd(object):
 
 if __name__ == "__main__":
     parser = ArgumentParser(
-        description = '0010_tensors.py (v1.0)',
+        description = 'main.py (v1.0)',
         epilog = "sfmunoz (C) 2026",
     )
 
