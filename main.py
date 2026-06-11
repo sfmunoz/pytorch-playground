@@ -158,11 +158,22 @@ class Operators(object):
         tensor_log(mean1," <mean1> ")
 
 # }}}
+# {{{ Operators.indexing()
+
+    def indexing(self):
+        log.info("==== Operators.indexing() ====")
+        x = torch.arange(12).reshape(3,4)
+        col2 = x[:,2]
+        tensor_log(x,"   <x> ")
+        tensor_log(col2,"<col2> ")
+
+# }}}
 # {{{ Operators.run()
 
     def run(self):
         self.star_vs_at()
         self.reduction()
+        self.indexing()
 
 # }}}
 # -------- main --------
