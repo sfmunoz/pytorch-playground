@@ -202,6 +202,49 @@ class Operators(object):
         self.gather()
 
 # }}}
+# -------- ModelScratch(object) -- class --------
+# {{{ ModelScratch -- class
+
+class ModelScratch(object):
+
+# }}}
+# {{{ ModelScratch.__init__()
+
+    def __init__(self,args):
+        log.info("==== ModelScratch.__init__() ====")
+        self.__args = args
+        self.__n = 10
+        self.__d_in = 1
+        self.__d_out = 1
+        self.__x = torch.randn(self.__n,self.__d_in)
+        self.__w_true = torch.tensor([[2.0]])
+        self.__b_true = torch.tensor(1.0)
+        self.__y_true = self.__x @ self.__w_true + self.__b_true + torch.randn(self.__n,self.__d_out) * 0.1
+        self.__w = torch.randn(self.__d_in,self.__d_out,requires_grad=True)
+        self.__b = torch.randn(1,requires_grad=True)
+        log.info(f"n={self.__n} | d_in={self.__d_in} | d_out={self.__d_out}")
+        tensor_log(self.__x,"     <x> ")
+        tensor_log(self.__w_true,"<w_true> ")
+        tensor_log(self.__b_true,"<b_true> ")
+        tensor_log(self.__y_true,"<y_true> ")
+        tensor_log(self.__w,"     <w> ")
+        tensor_log(self.__b,"     <b> ")
+
+# }}}
+# {{{ ModelScratch.forward_pass()
+
+    def forward_pass(self):
+        log.info("==== ModelScratch.forward_pass() ====")
+        y_hat = self.__x @ self.__w + self.__b
+        tensor_log(y_hat," <y_hat> ")
+
+# }}}
+# {{{ ModelScratch.run()
+
+    def run(self):
+        self.forward_pass()
+
+# }}}
 # -------- main --------
 # {{{ main
 
@@ -223,5 +266,6 @@ if __name__ == "__main__":
     TensorCreation(args).run()
     Autograd(args).run()
     Operators(args).run()
+    ModelScratch(args).run()
 
 # }}}
