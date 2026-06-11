@@ -16,7 +16,7 @@ log = getLogger(__name__)
 # {{{ tensor_log()
 
 def tensor_log(tensor,p="<tensor> ",f=log.info):
-    f(p + f"shape={tensor.shape} | dtype={tensor.dtype} | device={tensor.device} | requires_grad={tensor.requires_grad}")
+    f(p + f"shape={tensor.shape} | dtype={tensor.dtype} | device={tensor.device} | requires_grad={tensor.requires_grad} | grad_fn={tensor.grad_fn}")
     for x in str(tensor).split("\n"):
         f(p + x)
 
@@ -73,7 +73,7 @@ class TensorCreation(object):
         self.from_template()
 
 # }}}
-# -------- Autograd(object) -- class -- Automatic Differentiation (requires_grad=True, data -> parameter) --------
+# -------- Autograd(object) -- Automatic Differentiation (requires_grad=True, data -> parameter, used by loss.backward()) --------
 # {{{ Autograd -- class
 
 class Autograd(object):
@@ -95,10 +95,27 @@ class Autograd(object):
         tensor_log(w,"     <w> ")
 
 # }}}
+# {{{ Autograd.add_mult_graph()
+
+    def add_mult_graph(self):
+        log.info("==== Autograd.add_mult_graph() ====")
+        a = torch.tensor(2.0, requires_grad=True)
+        b = torch.tensor(3.0, requires_grad=True)
+        x = torch.tensor(4.0, requires_grad=True)
+        y = a + b
+        z = x * y
+        tensor_log(a,"<a> ")
+        tensor_log(b,"<b> ")
+        tensor_log(x,"<x> ")
+        tensor_log(y,"<y> ")
+        tensor_log(z,"<z> ")
+
+# }}}
 # {{{ Autograd.run()
 
     def run(self):
         self.data_vs_param()
+        self.add_mult_graph()
 
 # }}}
 # -------- main --------
