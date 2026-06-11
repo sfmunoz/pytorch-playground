@@ -253,11 +253,21 @@ class ModelScratch(object):
         return loss
 
 # }}}
+# {{{ ModelScratch.backward()
+
+    def backward(self,loss):
+        log.info("==== ModelScratch.backward() ====")
+        loss.backward()  # calcs ".grad"
+        tensor_log(self.__w.grad,"<w.grad> ")
+        tensor_log(self.__b.grad,"<b.grad> ")
+
+# }}}
 # {{{ ModelScratch.run()
 
     def run(self):
         y_hat = self.forward_pass()
-        self.loss(y_hat)
+        loss = self.loss(y_hat)
+        self.backward(loss)
 
 # }}}
 # -------- main --------
