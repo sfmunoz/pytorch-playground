@@ -4,12 +4,11 @@
 # {{{ imports
 
 import sys
+from argparse import ArgumentParser
 
 from logging import getLogger, basicConfig, INFO
 basicConfig(format='%(asctime)s [%(relativeCreated)7.0f] [%(levelname).1s] %(message)s',level=INFO,stream=sys.stderr)
 log = getLogger(__name__)
-
-from argparse import ArgumentParser
 
 # }}}
 # -------- TensorCreation(object) -- class --------
