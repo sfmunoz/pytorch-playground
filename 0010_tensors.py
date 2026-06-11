@@ -16,6 +16,7 @@ log = getLogger(__name__)
 # {{{ tensor_log()
 
 def tensor_log(tensor,p="<tensor> ",f=log.info):
+    f(p + f"shape={tensor.shape} | dtype={tensor.dtype} | device={tensor.device}")
     for x in str(tensor).split("\n"):
         f(p + x)
 
