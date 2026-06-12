@@ -221,6 +221,7 @@ class ModelCommon(object):
         self._d_out = 1
         self._lr = 0.01
         self._epochs = 200
+        self._step_log = 20
         self._noise = 0.1
         self._x = torch.randn(self._n,self._d_in)
         self._w_true = torch.tensor([[2.0]])
@@ -265,7 +266,7 @@ class ModelScratch(ModelCommon):
                 self._b -= self._lr * self._b.grad
             self._w.grad.zero_()
             self._b.grad.zero_()
-            if epoch % 10 != 0:
+            if epoch % self._step_log != 0:
                 continue
             log.info(f"epoch={epoch:03d} | loss={loss.item():.4f} | w={self._w.item()} | b={self._b.item()}")
         log.info(f" true: w={self._w_true.item()} | b={self._b_true.item()}")
@@ -312,7 +313,7 @@ class ModelNN(ModelCommon,nn.Module):
             self._optimizer.zero_grad()
             loss.backward()
             self._optimizer.step()
-            if epoch % 10 != 0:
+            if epoch % self._step_log != 0:
                 continue
             log.info(f"epoch={epoch:03d} | loss={loss.item():.4f} | w={self.linear_layer.weight.item()} | b={self.linear_layer.bias.item()}")
         log.info(f" true: w={self._w_true.item()} | b={self._b_true.item()}")
