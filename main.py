@@ -251,6 +251,8 @@ class ModelScratch(object):
                 self.__b -= self.__lr * self.__b.grad
             self.__w.grad.zero_()
             self.__b.grad.zero_()
+            if epoch % 5 != 0:
+                continue
             log.info(f"epoch={epoch:03d} | loss={loss.item():.4f} | w={self.__w.item()} | b={self.__b.item()}")
         log.info(f"final: w={self.__w.item()} | b={self.__b.item()}")
         log.info(f" true: w={self.__w_true.item()} | b={self.__b_true.item()}")
