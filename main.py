@@ -218,10 +218,11 @@ class ModelScratch(object):
         self.__d_out = 1
         self.__lr = 0.01
         self.__epochs = 200
+        self.__noise = 0.1
         self.__x = torch.randn(self.__n,self.__d_in)
         self.__w_true = torch.tensor([[2.0]])
         self.__b_true = torch.tensor(1.0)
-        self.__y_true = self.__x @ self.__w_true + self.__b_true + torch.randn(self.__n,self.__d_out) * 0.1
+        self.__y_true = self.__x @ self.__w_true + self.__b_true + torch.randn(self.__n,self.__d_out) * self.__noise
         self.__w = torch.randn(self.__d_in,self.__d_out,requires_grad=True)
         self.__b = torch.randn(1,requires_grad=True)
         log.info(f"n={self.__n} | d_in={self.__d_in} | d_out={self.__d_out} | lr={self.__lr} | epochs={self.__epochs}")
