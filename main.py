@@ -291,7 +291,8 @@ class ModelNN(ModelCommon,nn.Module):
         for p in self.parameters():
             for x in str(p).split("\n"):
                 log.info("    <param> " + x)
-        self._optimizer = optim.Adam(self.parameters(),lr=self._lr)
+        #self._optimizer = optim.Adam(self.parameters(),lr=self._lr)
+        self._optimizer = optim.SGD(self.parameters(),lr=self._lr)
         self._loss_fn = nn.MSELoss()
         tensor_log(self.linear_layer.weight,"     <w> ")
         tensor_log(self.linear_layer.bias,"     <b> ")
