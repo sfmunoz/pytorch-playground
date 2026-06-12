@@ -253,7 +253,7 @@ class ModelScratch(object):
                 self.__b -= self.__lr * self.__b.grad
             self.__w.grad.zero_()
             self.__b.grad.zero_()
-            if epoch % 5 != 0:
+            if epoch % 10 != 0:
                 continue
             log.info(f"epoch={epoch:03d} | loss={loss.item():.4f} | w={self.__w.item()} | b={self.__b.item()}")
         log.info(f"final: w={self.__w.item()} | b={self.__b.item()}")
@@ -317,7 +317,7 @@ class ModelNN(nn.Module):
             self.__optimizer.zero_grad()
             loss.backward()
             self.__optimizer.step()
-            if epoch % 5 != 0:
+            if epoch % 10 != 0:
                 continue
             log.info(f"epoch={epoch:03d} | loss={loss.item():.4f} | w={self.linear_layer.weight.item()} | b={self.linear_layer.bias.item()}")
         log.info(f"final: w={self.linear_layer.weight.item()} | b={self.linear_layer.bias.item()}")
