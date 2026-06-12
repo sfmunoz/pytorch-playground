@@ -240,7 +240,7 @@ class ModelScratch(object):
 
     def run(self):
         log.info("==== ModelScratch.run() ====")
-        for epoch in range(self.__epochs):
+        for epoch in range(1,self.__epochs+1):
             y_hat = self.__x @ self.__w + self.__b
             err = y_hat - self.__y_true
             sq_err = err ** 2
