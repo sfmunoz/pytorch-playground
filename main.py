@@ -7,6 +7,8 @@
 
 import sys
 import torch
+import torch.nn as nn
+import torch.optim as optim
 from argparse import ArgumentParser
 
 from logging import getLogger, basicConfig, INFO
@@ -258,6 +260,70 @@ class ModelScratch(object):
         log.info(f" true: w={self.__w_true.item()} | b={self.__b_true.item()}")
 
 # }}}
+# -------- ModelNN(nn.Module) -- class --------
+# {{{ ModelNN -- class
+
+class ModelNN(nn.Module):
+
+# }}}
+# {{{ ModelNN.__init__()
+
+    def __init__(self,args):
+        log.info("==== ModelNN.__init__() ====")
+        super().__init__()
+        self.__args = args
+        self.linear_layer = nn.Linear(in_features=1,out_features=1)
+        tensor_log(self.linear_layer.weight,"<ll.weight> ")
+        tensor_log(self.linear_layer.bias,"  <ll.bias> ")
+        for x in str(self).split("\n"):
+              log.info("    <model> " + x)
+        for p in self.parameters():
+            for x in str(p).split("\n"):
+                log.info("    <param> " + x)
+        self.__lr = 0.01
+        self.__optimizer = optim.Adam(self.parameters(),lr=self.__lr)
+        self.__loss_fn = nn.MSELoss()
+        self.__n = 10
+        self.__d_in = 1
+        self.__d_out = 1
+        self.__epochs = 200
+        self.__noise = 0.1
+        self.__x = torch.randn(self.__n,self.__d_in)
+        self.__w_true = torch.tensor([[2.0]])
+        self.__b_true = torch.tensor([[1.0]])
+        self.__y_true = self.__x @ self.__w_true + self.__b_true + torch.randn(self.__n,self.__d_out) * self.__noise
+        log.info(f"n={self.__n} | d_in={self.__d_in} | d_out={self.__d_out} | lr={self.__lr} | epochs={self.__epochs}")
+        tensor_log(self.__x,"     <x> ")
+        tensor_log(self.__w_true,"<w_true> ")
+        tensor_log(self.__b_true,"<b_true> ")
+        tensor_log(self.__y_true,"<y_true> ")
+        tensor_log(self.linear_layer.weight,"     <w> ")
+        tensor_log(self.linear_layer.bias,"     <b> ")
+
+# }}}
+# {{{ ModelNN.forward()
+
+    def forward(self,x):
+        return self.linear_layer(x)
+
+# }}}
+# {{{ ModelNN.run()
+
+    def run(self):
+        log.info("==== ModelNN.run() ====")
+        for epoch in range(1,self.__epochs+1):
+            y_hat = self(self.__x)
+            loss = self.__loss_fn(y_hat,self.__y_true)
+            self.__optimizer.zero_grad()
+            loss.backward()
+            self.__optimizer.step()
+            if epoch % 5 != 0:
+                continue
+            log.info(f"epoch={epoch:03d} | loss={loss.item():.4f} | w={self.linear_layer.weight.item()} | b={self.linear_layer.bias.item()}")
+        log.info(f"final: w={self.linear_layer.weight.item()} | b={self.linear_layer.bias.item()}")
+        log.info(f" true: w={self.__w_true.item()} | b={self.__b_true.item()}")
+
+# }}}
 # -------- main --------
 # {{{ main
 
@@ -280,5 +346,6 @@ if __name__ == "__main__":
     Autograd(args).run()
     Operators(args).run()
     ModelScratch(args).run()
+    ModelNN(args).run()
 
 # }}}
