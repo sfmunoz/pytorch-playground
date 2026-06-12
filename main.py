@@ -206,97 +206,92 @@ class Operators(object):
         self.gather()
 
 # }}}
-# -------- ModelScratch(object) -- class --------
+# -------- ModelCommon(object) -- class --------
+# {{{ ModelCommon -- class
+
+class ModelCommon(object):
+
+# }}}
+# {{{ ModelCommon.__init__()
+
+    def __init__(self,args):
+        self._args = args
+        self._n = 10
+        self._d_in = 1
+        self._d_out = 1
+        self._lr = 0.01
+        self._epochs = 200
+        self._noise = 0.1
+        self._x = torch.randn(self._n,self._d_in)
+        self._w_true = torch.tensor([[2.0]])
+        self._b_true = torch.tensor([[1.0]])
+        self._y_true = self._x @ self._w_true + self._b_true + torch.randn(self._n,self._d_out) * self._noise
+        log.info(f"n={self._n} | d_in={self._d_in} | d_out={self._d_out} | lr={self._lr} | epochs={self._epochs}")
+        tensor_log(self._x,"     <x> ")
+        tensor_log(self._w_true,"<w_true> ")
+        tensor_log(self._b_true,"<b_true> ")
+        tensor_log(self._y_true,"<y_true> ")
+
+# }}}
+# -------- ModelScratch(ModelCommon) -- class --------
 # {{{ ModelScratch -- class
 
-class ModelScratch(object):
+class ModelScratch(ModelCommon):
 
 # }}}
 # {{{ ModelScratch.__init__()
 
     def __init__(self,args):
         log.info("==== ModelScratch.__init__() ====")
-        self.__args = args
-        self.__n = 10
-        self.__d_in = 1
-        self.__d_out = 1
-        self.__lr = 0.01
-        self.__epochs = 200
-        self.__noise = 0.1
-        self.__x = torch.randn(self.__n,self.__d_in)
-        self.__w_true = torch.tensor([[2.0]])
-        self.__b_true = torch.tensor([[1.0]])
-        self.__y_true = self.__x @ self.__w_true + self.__b_true + torch.randn(self.__n,self.__d_out) * self.__noise
-        self.__w = torch.randn(self.__d_in,self.__d_out,requires_grad=True)
-        self.__b = torch.randn(self.__d_in,self.__d_out,requires_grad=True)
-        log.info(f"n={self.__n} | d_in={self.__d_in} | d_out={self.__d_out} | lr={self.__lr} | epochs={self.__epochs}")
-        tensor_log(self.__x,"     <x> ")
-        tensor_log(self.__w_true,"<w_true> ")
-        tensor_log(self.__b_true,"<b_true> ")
-        tensor_log(self.__y_true,"<y_true> ")
-        tensor_log(self.__w,"     <w> ")
-        tensor_log(self.__b,"     <b> ")
+        ModelCommon.__init__(self,args)
+        self._w = torch.randn(self._d_in,self._d_out,requires_grad=True)
+        self._b = torch.randn(self._d_in,self._d_out,requires_grad=True)
+        tensor_log(self._w,"     <w> ")
+        tensor_log(self._b,"     <b> ")
 
 # }}}
 # {{{ ModelScratch.run()
 
     def run(self):
         log.info("==== ModelScratch.run() ====")
-        for epoch in range(1,self.__epochs+1):
-            y_hat = self.__x @ self.__w + self.__b
-            err = y_hat - self.__y_true
+        for epoch in range(1,self._epochs+1):
+            y_hat = self._x @ self._w + self._b
+            err = y_hat - self._y_true
             sq_err = err ** 2
             loss = sq_err.mean()
             loss.backward()  # calcs ".grad"
             with torch.no_grad():
-                self.__w -= self.__lr * self.__w.grad
-                self.__b -= self.__lr * self.__b.grad
-            self.__w.grad.zero_()
-            self.__b.grad.zero_()
+                self._w -= self._lr * self._w.grad
+                self._b -= self._lr * self._b.grad
+            self._w.grad.zero_()
+            self._b.grad.zero_()
             if epoch % 10 != 0:
                 continue
-            log.info(f"epoch={epoch:03d} | loss={loss.item():.4f} | w={self.__w.item()} | b={self.__b.item()}")
-        log.info(f"final: w={self.__w.item()} | b={self.__b.item()}")
-        log.info(f" true: w={self.__w_true.item()} | b={self.__b_true.item()}")
+            log.info(f"epoch={epoch:03d} | loss={loss.item():.4f} | w={self._w.item()} | b={self._b.item()}")
+        log.info(f" true: w={self._w_true.item()} | b={self._b_true.item()}")
+        log.info(f"final: w={self._w.item()} | b={self._b.item()}")
 
 # }}}
-# -------- ModelNN(nn.Module) -- class --------
+# -------- ModelNN(ModelCommon,nn.Module) -- class --------
 # {{{ ModelNN -- class
 
-class ModelNN(nn.Module):
+class ModelNN(ModelCommon,nn.Module):
 
 # }}}
 # {{{ ModelNN.__init__()
 
     def __init__(self,args):
         log.info("==== ModelNN.__init__() ====")
-        super().__init__()
-        self.__args = args
-        self.__n = 10
-        self.__d_in = 1
-        self.__d_out = 1
-        self.__lr = 0.01
-        self.__epochs = 200
-        self.__noise = 0.1
-        self.__x = torch.randn(self.__n,self.__d_in)
-        self.__w_true = torch.tensor([[2.0]])
-        self.__b_true = torch.tensor([[1.0]])
-        self.__y_true = self.__x @ self.__w_true + self.__b_true + torch.randn(self.__n,self.__d_out) * self.__noise
+        ModelCommon.__init__(self,args)
+        nn.Module.__init__(self)
         self.linear_layer = nn.Linear(in_features=1,out_features=1)
-        tensor_log(self.linear_layer.weight,"<ll.weight> ")
-        tensor_log(self.linear_layer.bias,"  <ll.bias> ")
         for x in str(self).split("\n"):
               log.info("    <model> " + x)
         for p in self.parameters():
             for x in str(p).split("\n"):
                 log.info("    <param> " + x)
-        self.__optimizer = optim.Adam(self.parameters(),lr=self.__lr)
-        self.__loss_fn = nn.MSELoss()
-        log.info(f"n={self.__n} | d_in={self.__d_in} | d_out={self.__d_out} | lr={self.__lr} | epochs={self.__epochs}")
-        tensor_log(self.__x,"     <x> ")
-        tensor_log(self.__w_true,"<w_true> ")
-        tensor_log(self.__b_true,"<b_true> ")
-        tensor_log(self.__y_true,"<y_true> ")
+        self._optimizer = optim.Adam(self.parameters(),lr=self._lr)
+        self._loss_fn = nn.MSELoss()
         tensor_log(self.linear_layer.weight,"     <w> ")
         tensor_log(self.linear_layer.bias,"     <b> ")
 
@@ -311,17 +306,17 @@ class ModelNN(nn.Module):
 
     def run(self):
         log.info("==== ModelNN.run() ====")
-        for epoch in range(1,self.__epochs+1):
-            y_hat = self(self.__x)
-            loss = self.__loss_fn(y_hat,self.__y_true)
-            self.__optimizer.zero_grad()
+        for epoch in range(1,self._epochs+1):
+            y_hat = self(self._x)
+            loss = self._loss_fn(y_hat,self._y_true)
+            self._optimizer.zero_grad()
             loss.backward()
-            self.__optimizer.step()
+            self._optimizer.step()
             if epoch % 10 != 0:
                 continue
             log.info(f"epoch={epoch:03d} | loss={loss.item():.4f} | w={self.linear_layer.weight.item()} | b={self.linear_layer.bias.item()}")
+        log.info(f" true: w={self._w_true.item()} | b={self._b_true.item()}")
         log.info(f"final: w={self.linear_layer.weight.item()} | b={self.linear_layer.bias.item()}")
-        log.info(f" true: w={self.__w_true.item()} | b={self.__b_true.item()}")
 
 # }}}
 # -------- main --------
