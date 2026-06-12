@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # vim: set foldmethod=marker:
 
+# Ref: PyTorch in 1 Hour -> https://www.youtube.com/watch?v=r1bquDz5GGA
+
 # {{{ imports
 
 import sys
