@@ -15,6 +15,13 @@ PyTorch playground
 - [PyTorch Crash Course: Deep Learning in Python](https://www.youtube.com/watch?v=uq7sbUlIDR8)
 - [Visual Introduction to PyTorch](https://www.youtube.com/watch?v=G4UAQ6bxQzE)
 
+## Usage
+
+```
+$ uv sync
+$ uv run main.py
+```
+
 ## The 5-step deep learning recipe
 
 From [PyTorch in 1 Hour → 1m26s](https://www.youtube.com/watch?v=r1bquDz5GGA&t=86s):
