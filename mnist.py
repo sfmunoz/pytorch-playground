@@ -104,6 +104,11 @@ class Mnist(object):
             self.__mnist_std = all_images.std().item()    # 0.3081
         log.info(f"mnist_mean ... {self.__mnist_mean:.4f}")
         log.info(f"mnist_std .... {self.__mnist_std:.4f}")
+        self.__batch_size = 100
+        self.__train_loader = DataLoader(self.__train_data,batch_size=self.__batch_size,shuffle=True,num_workers=1)
+        self.__test_loader = DataLoader(self.__test_data,batch_size=self.__batch_size,shuffle=True,num_workers=1)
+        log.info(f"train_loader ... {self.__batch_size:3d} x {len(self.__train_loader):5d} = {len(self.__train_data):5d}")
+        log.info(f"test_loader .... {self.__batch_size:3d} x {len(self.__test_loader):5d} = {len(self.__test_data):5d}")
 
 # }}}
 # {{{ Mnist.run()
