@@ -16,6 +16,16 @@ basicConfig(format='%(asctime)s [%(relativeCreated)7.0f] [%(levelname).1s] %(mes
 log = getLogger(__name__)
 
 # }}}
+# {{{ globals
+
+# torch.cuda.is_available()
+# torch.cuda.device_count()
+# torch.cuda.get_device_name(0)
+# torch.cuda.device(0)
+
+DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+# }}}
 # -------- functions --------
 # {{{ tensor_log()
 
@@ -79,12 +89,22 @@ class TensorCreation(object):
         tensor_log(my_tensor,"<my_tensor> ")
 
 # }}}
+# {{{ TensorCreation.to_device()
+
+    def to_device(self):
+        log.info("==== TensorCreation.to_device() ====")
+        data = [[1,2,3],[4,5,6]]
+        my_tensor = torch.tensor(data).to(DEVICE)
+        tensor_log(my_tensor,"<my_tensor> ")
+
+# }}}
 # {{{ TensorCreation.run()
 
     def run(self):
         self.from_data()
         self.from_shape()
         self.from_template()
+        self.to_device()
 
 # }}}
 # -------- Autograd(object) -- Automatic Differentiation (requires_grad=True, data -> parameter, used by loss.backward()) --------
