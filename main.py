@@ -25,6 +25,16 @@ def tensor_log(t,p="<tensor> ",f=log.info):
         f(p + x)
 
 # }}}
+# {{{ model_log()
+
+def model_log(m,pm=" <model> ",pp=" <param> ",f=log.info):
+    for x in str(m).split("\n"):
+            f(pm + x)
+    for p in m.parameters():
+        for x in str(p).split("\n"):
+            f(pp + x)
+
+# }}}
 # -------- TensorCreation(object) -- class --------
 # {{{ TensorCreation -- class
 
@@ -287,11 +297,7 @@ class ModelNN(nn.Module):
         self.__args = args
         self.__p = ModelParams()
         self.linear_layer = nn.Linear(in_features=1,out_features=1)
-        for x in str(self).split("\n"):
-              log.info(" <model> " + x)
-        for p in self.parameters():
-            for x in str(p).split("\n"):
-                log.info(" <param> " + x)
+        model_log(self)
         #self._optimizer = optim.Adam(self.parameters(),lr=self.__p.lr)
         self.__optimizer = optim.SGD(self.parameters(),lr=self.__p.lr)
         self.__loss_fn = nn.MSELoss()
