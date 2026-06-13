@@ -7,7 +7,7 @@
 
 # {{{ imports
 
-import sys
+import sys, os
 from argparse import ArgumentParser
 
 import torch
@@ -67,13 +67,16 @@ class Mnist(object):
         self.__test_data = datasets.MNIST(root="./data", train=False, download=True, transform=transforms.ToTensor())
         log.info(f"train_data ... {len(self.__train_data)} samples")  # 60000
         log.info(f"test_data .... {len(self.__test_data)} samples")   # 10000
-        all_images = torch.stack([img for img, _ in self.__train_data], dim=0)
-        log.info(f"all_images ... {all_images.shape}")  # 60000,1,28,28
-        #tensor_log(all_images,"<all_images> ")  # 60000,1,28,28
-        self.__mnist_mean = all_images.mean().item()
-        self.__mnist_std = all_images.std().item()
-        log.info(f"mnist_mean ... {self.__mnist_mean:.4f}")  # 0.1307
-        log.info(f"mnist_std .... {self.__mnist_std:.4f}")   # 0.3081
+        self.__mnist_mean = 0.1307
+        self.__mnist_std = 0.3081
+        if os.getenv("MNIST_CALC") == "1":
+            all_images = torch.stack([img for img, _ in self.__train_data], dim=0)
+            log.info(f"all_images ... {all_images.shape}")  # 60000,1,28,28
+            #tensor_log(all_images,"<all_images> ")  # 60000,1,28,28
+            self.__mnist_mean = all_images.mean().item()  # 0.1307
+            self.__mnist_std = all_images.std().item()    # 0.3081
+        log.info(f"mnist_mean ... {self.__mnist_mean:.4f}")
+        log.info(f"mnist_std .... {self.__mnist_std:.4f}")
 
 # }}}
 # {{{ Mnist.run()
