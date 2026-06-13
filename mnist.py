@@ -143,6 +143,17 @@ class Mnist(object):
         log.info("==== Mnist.run() ====")
         model = MyNet()
         model_log(model)
+        optimizer = optim.Adam(model.parameters(),lr=0.001)
+        loss_fn = nn.CrossEntropyLoss()
+        model.train()
+        for i,(data,target) in enumerate(self.__train_loader,1):
+            log.info(f"==== {i} ====")
+            tensor_log(data,"  <data> ")      # 100 x 1 x 28 x 28
+            tensor_log(target,"  <target> ")  # 100
+            #y_hat = model(data)
+            #log.info(f"y_hat .... {y_hat}")
+            #log.info(f"target ... {target}")
+            break
 
 # }}}
 # -------- main --------
