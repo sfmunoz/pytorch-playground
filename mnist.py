@@ -96,7 +96,7 @@ class MyNet(nn.Module):
         x = self.R(self.Matrix1(x))
         x = self.R(self.Matrix2(x))
         x = self.Matrix3(x)
-        return x.squeeze()
+        return x.squeeze() # A×1×B×C×1×D -> A×B×C×D
 
 # }}}
 # -------- Mnist(object) -- class --------
@@ -118,7 +118,8 @@ class Mnist(object):
         log.info(f"test_data .... {len(self.__test_data)} samples")   # 10000
         for i in range(3):
             log.info(f"==== {self.__train_data[i][1]} ====")
-            img_plot(self.__train_data[i][0][0])
+            #img_plot(self.__train_data[i][0][0])
+            img_plot(self.__train_data[i][0].squeeze())  # A×1×B×C×1×D -> A×B×C×D
         self.__mnist_mean = 0.1307
         self.__mnist_std = 0.3081
         if os.getenv("MNIST_CALC") == "1":
