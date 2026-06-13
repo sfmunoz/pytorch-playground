@@ -24,6 +24,7 @@ log = getLogger(__name__)
 # torch.cuda.device(0)
 
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
+torch.set_default_device(DEVICE)
 
 # }}}
 # -------- functions --------
