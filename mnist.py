@@ -74,6 +74,31 @@ def img_plot(img, p="<img> ", f=log.info):
         f(p + line)
 
 # }}}
+# -------- MyNet(nn.Module) -- class --------
+# {{{ MyNet -- class
+
+class MyNet(nn.Module):
+
+# }}}
+# {{{ MyNet.__init__()
+
+    def __init__(self):
+        super().__init__()
+        self.Matrix1 = nn.Linear(28**2,16)
+        self.Matrix2 = nn.Linear(16,16)
+        self.Matrix3 = nn.Linear(16,10)
+        self.R = nn.ReLU()
+
+# }}}
+# {{{ MyNet.forward()
+
+    def forward(self,x):
+        x = self.R(self.Matrix1(x))
+        x = self.R(self.Matrix2(x))
+        x = self.Matrix3(x)
+        return x.squeeze()
+
+# }}}
 # -------- Mnist(object) -- class --------
 # {{{ Mnist -- class
 
@@ -115,7 +140,8 @@ class Mnist(object):
 
     def run(self):
         log.info("==== Mnist.run() ====")
-        log.warning("to be implemented")
+        model = MyNet()
+        model_log(model)
 
 # }}}
 # -------- main --------
