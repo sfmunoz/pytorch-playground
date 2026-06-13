@@ -46,10 +46,17 @@ def tensor_log(t,p="<tensor> ",f=log.info):
 
 def model_log(m,pm=" <model> ",pp=" <param> ",f=log.info):
     for x in str(m).split("\n"):
-            f(pm + x)
+        f(pm + x)
     for p in m.parameters():
         for x in str(p).split("\n"):
             f(pp + x)
+
+# }}}
+# {{{ dataset_log()
+
+def dataset_log(d,p="<dataset> ",f=log.info):
+    for x in str(d).split("\n"):
+        f(p + x)
 
 # }}}
 # -------- Mnist(object) -- class --------
@@ -65,6 +72,8 @@ class Mnist(object):
         self.__args = args
         self.__train_data = datasets.MNIST(root="./data", train=True, download=True, transform=transforms.ToTensor())
         self.__test_data = datasets.MNIST(root="./data", train=False, download=True, transform=transforms.ToTensor())
+        dataset_log(self.__train_data,"<train_data> ")
+        dataset_log(self.__test_data," <test_data> ")
         log.info(f"train_data ... {len(self.__train_data)} samples")  # 60000
         log.info(f"test_data .... {len(self.__test_data)} samples")   # 10000
         self.__mnist_mean = 0.1307
