@@ -288,10 +288,10 @@ class ModelNN(nn.Module):
         self.__p = ModelParams()
         self.linear_layer = nn.Linear(in_features=1,out_features=1)
         for x in str(self).split("\n"):
-              log.info("    <model> " + x)
+              log.info(" <model> " + x)
         for p in self.parameters():
             for x in str(p).split("\n"):
-                log.info("    <param> " + x)
+                log.info(" <param> " + x)
         #self._optimizer = optim.Adam(self.parameters(),lr=self.__p.lr)
         self.__optimizer = optim.SGD(self.parameters(),lr=self.__p.lr)
         self.__loss_fn = nn.MSELoss()
