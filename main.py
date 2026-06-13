@@ -296,7 +296,7 @@ class ModelNN(nn.Module):
         super().__init__()
         self.__args = args
         self.__p = ModelParams()
-        self.linear_layer = nn.Linear(in_features=1,out_features=1)
+        self.linear_layer = nn.Linear(in_features=self.__p.d_in,out_features=self.__p.d_out)
         model_log(self)
         #self._optimizer = optim.Adam(self.parameters(),lr=self.__p.lr)
         self.__optimizer = optim.SGD(self.parameters(),lr=self.__p.lr)
