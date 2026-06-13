@@ -8,10 +8,14 @@
 # {{{ imports
 
 import sys
+from argparse import ArgumentParser
+
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from argparse import ArgumentParser
+import torch.nn.functional as F
+from torch.utils.data import Dataset, DataLoader
+from torchvision import datasets, transforms
 
 from logging import getLogger, basicConfig, INFO
 basicConfig(format='%(asctime)s [%(relativeCreated)7.0f] [%(levelname).1s] %(message)s',level=INFO,stream=sys.stderr)
@@ -59,6 +63,17 @@ class Mnist(object):
     def __init__(self,args):
         log.info("==== Mnist.__init__() ====")
         self.__args = args
+        self.__train_data = datasets.MNIST(root="./data", train=True, download=True, transform=transforms.ToTensor())
+        self.__test_data = datasets.MNIST(root="./data", train=False, download=True, transform=transforms.ToTensor())
+        log.info(f"train_data ... {len(self.__train_data)} samples")  # 60000
+        log.info(f"test_data .... {len(self.__test_data)} samples")   # 10000
+        all_images = torch.stack([img for img, _ in self.__train_data], dim=0)
+        log.info(f"all_images ... {all_images.shape}")  # 60000,1,28,28
+        #tensor_log(all_images,"<all_images> ")  # 60000,1,28,28
+        self.__mnist_mean = all_images.mean().item()
+        self.__mnist_std = all_images.std().item()
+        log.info(f"mnist_mean ... {self.__mnist_mean:.4f}")  # 0.1307
+        log.info(f"mnist_std .... {self.__mnist_std:.4f}")   # 0.3081
 
 # }}}
 # {{{ Mnist.run()
