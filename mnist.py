@@ -73,8 +73,11 @@ def img_plot(img, p="<img> ", f=log.info):
         raise Exception(f"expected 2D tensor (HxW) got {img.dim()}D")
     if img.shape[0] != 28 or img.shape[1] != 28:
         raise Exception(f"expected 28x28 got {list(img.shape)}")
+    v_min = img.min().item()
+    v_max = img.max().item()
+    span = v_max - v_min if v_max != v_min else 1.0
     for row in img:
-        line = "".join(SHADES[int(v * (N_SHADES - 1))] for v in row.tolist())
+        line = "".join(SHADES[int(((v - v_min) / span) * (N_SHADES - 1))] for v in row.tolist())
         f(p + line)
 
 # }}}
