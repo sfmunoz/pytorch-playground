@@ -115,18 +115,10 @@ class Mnist(object):
     def __init__(self,args):
         log.info("==== Mnist.__init__() ====")
         self.__args = args
-        self.__train_data = datasets.MNIST(root="./data", train=True, download=True, transform=transforms.ToTensor())
-        self.__test_data = datasets.MNIST(root="./data", train=False, download=True, transform=transforms.ToTensor())
-        dataset_log(self.__train_data,"<train_data> ")
-        dataset_log(self.__test_data," <test_data> ")
-        log.info(f"train_data ... {len(self.__train_data)} samples")  # 60000
-        log.info(f"test_data .... {len(self.__test_data)} samples")   # 10000
-        if log.isEnabledFor(DEBUG):
-            for i in range(3):
-                img_plot(self.__train_data[i][0].squeeze(),f"<{self.__train_data[i][1]}> ",f=log.debug)  # squeeze(): A×1×B×C×1×D -> A×B×C×D
         self.__mnist_mean = 0.1307
         self.__mnist_std = 0.3081
         if os.getenv("MNIST_CALC") == "1":
+            raw_data = datasets.MNIST(root="./data", train=True, download=True, transform=transforms.ToTensor())
             all_images = torch.stack([img for img, _ in self.__train_data], dim=0)
             log.info(f"all_images ... {all_images.shape}")  # 60000,1,28,28
             #tensor_log(all_images,"<all_images> ")  # 60000,1,28,28
@@ -134,6 +126,19 @@ class Mnist(object):
             self.__mnist_std = all_images.std().item()    # 0.3081
         log.info(f"mnist_mean ... {self.__mnist_mean:.4f}")
         log.info(f"mnist_std .... {self.__mnist_std:.4f}")
+        transform = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize(self.__mnist_mean, self.__mnist_std),
+        ])
+        self.__train_data = datasets.MNIST(root="./data", train=True, download=True, transform=transform)
+        self.__test_data = datasets.MNIST(root="./data", train=False, download=True, transform=transform)
+        dataset_log(self.__train_data,"<train_data> ")
+        dataset_log(self.__test_data," <test_data> ")
+        log.info(f"train_data ... {len(self.__train_data)} samples")  # 60000
+        log.info(f"test_data .... {len(self.__test_data)} samples")   # 10000
+        if log.isEnabledFor(DEBUG):
+            for i in range(3):
+                img_plot(self.__train_data[i][0].squeeze(),f"<{self.__train_data[i][1]}> ",f=log.debug)  # squeeze(): A×1×B×C×1×D -> A×B×C×D
         self.__batch_size = 25
         self.__train_loader = DataLoader(self.__train_data,batch_size=self.__batch_size,shuffle=True,num_workers=1)
         self.__test_loader = DataLoader(self.__test_data,batch_size=self.__batch_size,shuffle=True,num_workers=1)
