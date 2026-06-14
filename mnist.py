@@ -46,9 +46,11 @@ def tensor_log(t,p="<tensor> ",d=False,f=log.info):
 # }}}
 # {{{ model_log()
 
-def model_log(m,pm=" <model> ",pp=" <param> ",f=log.info):
+def model_log(m,pm=" <model> ",pp=" <param> ",d=False,f=log.info):
     for x in str(m).split("\n"):
         f(pm + x)
+    if not d:
+        return
     for p in m.parameters():
         for x in str(p).split("\n"):
             f(pp + x)
