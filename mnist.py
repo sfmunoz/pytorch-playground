@@ -17,7 +17,7 @@ import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader
 from torchvision import datasets, transforms
 
-from logging import getLogger, basicConfig, INFO
+from logging import getLogger, basicConfig, INFO, DEBUG
 basicConfig(format='%(asctime)s [%(relativeCreated)7.0f] [%(levelname).1s] %(message)s',level=INFO,stream=sys.stderr)
 log = getLogger(__name__)
 
@@ -121,10 +121,9 @@ class Mnist(object):
         dataset_log(self.__test_data," <test_data> ")
         log.info(f"train_data ... {len(self.__train_data)} samples")  # 60000
         log.info(f"test_data .... {len(self.__test_data)} samples")   # 10000
-        for i in range(3):
-            log.info(f"==== {self.__train_data[i][1]} ====")
-            #img_plot(self.__train_data[i][0][0])
-            img_plot(self.__train_data[i][0].squeeze())  # A×1×B×C×1×D -> A×B×C×D
+        if log.isEnabledFor(DEBUG):
+            for i in range(3):
+                img_plot(self.__train_data[i][0].squeeze(),f"<{self.__train_data[i][1]}> ",f=log.debug)  # squeeze(): A×1×B×C×1×D -> A×B×C×D
         self.__mnist_mean = 0.1307
         self.__mnist_std = 0.3081
         if os.getenv("MNIST_CALC") == "1":
@@ -177,7 +176,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.debug:
-        from logging import DEBUG
         log.setLevel(DEBUG)
 
     Mnist(args).run()
