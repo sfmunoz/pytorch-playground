@@ -153,18 +153,22 @@ class Mnist(object):
 
     def __run_train(self):
         log.info("==== Mnist.__run__train() ====")
+        n_epochs = self.__args.epochs
         model = MyNet()
         model_log(model)
         optimizer = optim.Adam(model.parameters(),lr=0.001)
         loss_fn = nn.CrossEntropyLoss()
         model.train()
-        for i,(data,target) in enumerate(self.__train_loader,1):
-            log.info(f"==== {i} ====")
-            tensor_log(data,"  <data> ")    # <batch-size> x 1 x 28 x 28
-            tensor_log(target,"<target> ")  # <batch-size>
-            y_hat = model(data)
-            tensor_log(y_hat," <y_hat> ")   # <batch-size> x 10
-            break
+        for epoch in range(1, n_epochs + 1):
+            log.info(f"epoch {epoch}: begin")
+            for i,(data,target) in enumerate(self.__train_loader,1):
+                log.info(f"==== {i} ====")
+                tensor_log(data,"  <data> ")    # <batch-size> x 1 x 28 x 28
+                tensor_log(target,"<target> ")  # <batch-size>
+                y_hat = model(data)
+                tensor_log(y_hat," <y_hat> ")   # <batch-size> x 10
+                break
+            log.info(f"epoch {epoch}: end")
 
 # }}}
 # {{{ Mnist.__run_test()
@@ -193,6 +197,9 @@ if __name__ == "__main__":
 
     parser.add_argument('-d', '--debug', action='store_true',
                         help='enable debug mode')
+
+    parser.add_argument('-e', '--epochs', type=int, default=1,
+                        help='number of training epochs (default: 1)')
 
     args = parser.parse_args()
 
