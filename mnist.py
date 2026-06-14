@@ -141,10 +141,10 @@ class Mnist(object):
         log.info(f"test_loader .... {self.__batch_size:3d} x {len(self.__test_loader):5d} = {len(self.__test_data):5d}")
 
 # }}}
-# {{{ Mnist.run()
+# {{{ Mnist.__run_train()
 
-    def run(self):
-        log.info("==== Mnist.run() ====")
+    def __run_train(self):
+        log.info("==== Mnist.__run__train() ====")
         model = MyNet()
         model_log(model)
         optimizer = optim.Adam(model.parameters(),lr=0.001)
@@ -157,6 +157,21 @@ class Mnist(object):
             y_hat = model(data)
             tensor_log(y_hat," <y_hat> ")   # <batch-size> x 10
             break
+
+# }}}
+# {{{ Mnist.__run_test()
+
+    def __run_test(self):
+        log.info("==== Mnist.__run__test() ====")
+        log.warning("to be implemented")
+
+# }}}
+# {{{ Mnist.run()
+
+    def run(self):
+        log.info("==== Mnist.run() ====")
+        self.__run_train()
+        self.__run_test()
 
 # }}}
 # -------- main --------
