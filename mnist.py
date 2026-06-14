@@ -165,15 +165,25 @@ class Mnist(object):
         loss_fn = nn.CrossEntropyLoss()
         model.train()
         for epoch in range(1, n_epochs + 1):
-            log.info(f"epoch {epoch}: begin")
+            log.info(f"#### epoch {epoch}/{n_epochs} ####")
+            epoch_loss, epoch_correct, epoch_total = 0.0, 0, 0
             for i,(data,target) in enumerate(self.__train_loader,1):
-                log.info(f"==== {i} ====")
-                tensor_log(data,"  <data> ")    # <batch-size> x 1 x 28 x 28
-                tensor_log(target,"<target> ")  # <batch-size>
+                #tensor_log(data,"  <data> ")    # <batch-size> x 1 x 28 x 28
+                #tensor_log(target,"<target> ")  # <batch-size>
                 y_hat = model(data)
-                tensor_log(y_hat," <y_hat> ")   # <batch-size> x 10
-                break
-            log.info(f"epoch {epoch}: end")
+                loss = loss_fn(y_hat, target)
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+                epoch_loss += loss.item()
+                _, predicted = y_hat.max(1)
+                epoch_total += target.size(0)
+                epoch_correct += (predicted == target).sum().item()
+                if i % 100 == 0:
+                    log.info(f"  epoch {epoch:2d}/{n_epochs} | batch {i:5d}/{n_batches} | train_loss {epoch_loss/i:.4f}")
+            avg_loss = epoch_loss / n_batches
+            acc = 100.0 * epoch_correct / epoch_total
+            log.info(f"==== epoch {epoch:2d}/{n_epochs} done | train_loss {avg_loss:.4f} | train_acc {acc:.2f}% ====")
 
 # }}}
 # {{{ Mnist.__run_test()
