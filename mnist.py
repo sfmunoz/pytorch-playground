@@ -152,12 +152,10 @@ class Mnist(object):
         model.train()
         for i,(data,target) in enumerate(self.__train_loader,1):
             log.info(f"==== {i} ====")
-            tensor_log(data,"  <data> ")      # <batch-size> x 1 x 28 x 28
-            tensor_log(target,"  <target> ")  # <batch-size>
-            y_hat = model(data)  # <batch-size> x 10
-            tensor_log(y_hat,"   <y_hat> ")
-            #log.info(f"y_hat .... {y_hat}")
-            #log.info(f"target ... {target}")
+            tensor_log(data,"  <data> ")    # <batch-size> x 1 x 28 x 28
+            tensor_log(target,"<target> ")  # <batch-size>
+            y_hat = model(data)
+            tensor_log(y_hat," <y_hat> ")   # <batch-size> x 10
             break
 
 # }}}
