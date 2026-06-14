@@ -154,6 +154,11 @@ class Mnist(object):
     def __run_train(self):
         log.info("==== Mnist.__run__train() ====")
         n_epochs = self.__args.epochs
+        n_batches = len(self.__train_loader)
+        log.info(f"epochs ....... {n_epochs:5d}")
+        log.info(f"batch_size ... {self.__batch_size:5d}")
+        log.info(f"batches ...... {n_batches:5d}")
+        log.info(f"samples ...... {self.__batch_size * n_batches:5d}")
         model = MyNet()
         model_log(model)
         optimizer = optim.Adam(model.parameters(),lr=0.001)
