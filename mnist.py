@@ -85,9 +85,9 @@ class MyNet(nn.Module):
     def __init__(self):
         super().__init__()
         self.flatten = nn.Flatten()  # <batch-size> x 1 x 28 x 28 -> <batch-size> x 784
-        self.Matrix1 = nn.Linear(28**2,16)
-        self.Matrix2 = nn.Linear(16,16)
-        self.Matrix3 = nn.Linear(16,10)
+        self.fc1 = nn.Linear(28**2,16)
+        self.fc2 = nn.Linear(16,16)
+        self.fc3 = nn.Linear(16,10)
         self.R = nn.ReLU()
 
 # }}}
@@ -95,10 +95,9 @@ class MyNet(nn.Module):
 
     def forward(self,x):
         x = self.flatten(x)
-        x = self.R(self.Matrix1(x))
-        x = self.R(self.Matrix2(x))
-        x = self.Matrix3(x)
-        return x
+        x = self.R(self.fc1(x))
+        x = self.R(self.fc2(x))
+        return self.fc3(x)
 
 # }}}
 # -------- Mnist(object) -- class --------
