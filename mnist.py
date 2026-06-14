@@ -36,8 +36,10 @@ torch.set_default_device(DEVICE)
 # -------- functions --------
 # {{{ tensor_log()
 
-def tensor_log(t,p="<tensor> ",f=log.info):
+def tensor_log(t,p="<tensor> ",d=False,f=log.info):
     f(p + f"shape={t.shape} | dtype={t.dtype} | device={t.device} | requires_grad={t.requires_grad} | grad_fn={t.grad_fn}")
+    if not d:
+        return
     for x in str(t).split("\n"):
         f(p + x)
 
