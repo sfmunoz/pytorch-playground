@@ -84,6 +84,7 @@ class MyNet(nn.Module):
 
     def __init__(self):
         super().__init__()
+        self.flatten = nn.Flatten()  # <batch-size> x 1 x 28 x 28 -> <batch-size> x 784
         self.Matrix1 = nn.Linear(28**2,16)
         self.Matrix2 = nn.Linear(16,16)
         self.Matrix3 = nn.Linear(16,10)
@@ -93,10 +94,11 @@ class MyNet(nn.Module):
 # {{{ MyNet.forward()
 
     def forward(self,x):
+        x = self.flatten(x)
         x = self.R(self.Matrix1(x))
         x = self.R(self.Matrix2(x))
         x = self.Matrix3(x)
-        return x.squeeze() # A×1×B×C×1×D -> A×B×C×D
+        return x
 
 # }}}
 # -------- Mnist(object) -- class --------
@@ -148,9 +150,10 @@ class Mnist(object):
         model.train()
         for i,(data,target) in enumerate(self.__train_loader,1):
             log.info(f"==== {i} ====")
-            tensor_log(data,"  <data> ")      # 100 x 1 x 28 x 28
-            tensor_log(target,"  <target> ")  # 100
-            #y_hat = model(data)
+            tensor_log(data,"  <data> ")      # <batch-size> x 1 x 28 x 28
+            tensor_log(target,"  <target> ")  # <batch-size>
+            y_hat = model(data)  # <batch-size> x 10
+            tensor_log(y_hat,"   <y_hat> ")
             #log.info(f"y_hat .... {y_hat}")
             #log.info(f"target ... {target}")
             break
