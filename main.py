@@ -173,8 +173,8 @@ class Operators(object):
 
     def star_vs_at(self):
         log.info("==== Operators.star_vs_at() ====")
-        a = torch.tensor([[1,2],[3,4]])
-        b = torch.tensor([[5,6],[7,8]])
+        a = torch.tensor([[1.,2.],[3.,4.]])
+        b = torch.tensor([[5.,6.],[7.,8.]])
         star = a * b
         at = a @ b
         tensor_log(a,"   <a> ")
