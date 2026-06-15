@@ -18,7 +18,9 @@ PyTorch playground
 ## Usage
 
 ```
-$ uv sync
+$ uv sync                          # default deps (torch CPU)
+$ uv sync --group torch-std        # torch-std group (same as default)
+$ uv sync --group torch-xpu        # torch-xpu group + xpu index
 $ uv run main.py
 ```
 
