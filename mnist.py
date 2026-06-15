@@ -18,8 +18,6 @@ from torch.utils.data import Dataset, DataLoader
 from torchvision import datasets, transforms
 
 from logging import getLogger, basicConfig, INFO, DEBUG
-basicConfig(format='%(asctime)s [%(relativeCreated)7.0f] [%(levelname).1s] %(message)s',level=INFO,stream=sys.stderr)
-log = getLogger(__name__)
 
 # }}}
 # {{{ globals
@@ -34,6 +32,9 @@ DEVICE = 'xpu' if hasattr(torch,'xpu') and torch.xpu.is_available() \
     else 'cpu'
 
 #torch.set_default_device(DEVICE)
+
+basicConfig(format=f'%(asctime)s [%(relativeCreated)7.0f] [%(levelname).1s] ({DEVICE}) %(message)s',level=INFO,stream=sys.stderr)
+log = getLogger(__name__)
 
 # }}}
 # -------- functions --------
