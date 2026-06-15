@@ -30,7 +30,7 @@ log = getLogger(__name__)
 # torch.cuda.device(0)
 
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
-torch.set_default_device(DEVICE)
+#torch.set_default_device(DEVICE)
 
 # }}}
 # -------- functions --------
@@ -147,7 +147,7 @@ class Mnist(object):
         self.__test_loader = DataLoader(self.__test_data,batch_size=self.__batch_size,shuffle=True,num_workers=1)
         log.info(f"train_loader ... {self.__batch_size:3d} x {len(self.__train_loader):5d} = {len(self.__train_data):5d}")
         log.info(f"test_loader .... {self.__batch_size:3d} x {len(self.__test_loader):5d} = {len(self.__test_data):5d}")
-        self.__model = MyNet()
+        self.__model = MyNet().to(DEVICE)
         model_log(self.__model)
 
 # }}}
@@ -170,6 +170,7 @@ class Mnist(object):
             for i,(data,target) in enumerate(self.__train_loader,1):
                 #tensor_log(data,"  <data> ")    # <batch-size> x 1 x 28 x 28
                 #tensor_log(target,"<target> ")  # <batch-size>
+                data, target = data.to(DEVICE), target.to(DEVICE)
                 y_hat = self.__model(data)
                 loss = loss_fn(y_hat, target)
                 optimizer.zero_grad()
@@ -199,6 +200,7 @@ class Mnist(object):
         total_loss, total_correct, total_samples = 0.0, 0, 0
         with torch.no_grad():
             for i,(data,target) in enumerate(self.__test_loader,1):
+                data, target = data.to(DEVICE), target.to(DEVICE)
                 y_hat = self.__model(data)
                 loss = loss_fn(y_hat, target)
                 total_loss += loss.item()
