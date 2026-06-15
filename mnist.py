@@ -29,7 +29,10 @@ log = getLogger(__name__)
 # torch.cuda.get_device_name(0)
 # torch.cuda.device(0)
 
-DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
+DEVICE = 'xpu' if hasattr(torch,'xpu') and torch.xpu.is_available() \
+    else 'cuda' if hasattr(torch,'cuda') and torch.cuda.is_available() \
+    else 'cpu'
+
 #torch.set_default_device(DEVICE)
 
 # }}}
