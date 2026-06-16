@@ -15,13 +15,23 @@ PyTorch playground
 - [PyTorch Crash Course: Deep Learning in Python](https://www.youtube.com/watch?v=uq7sbUlIDR8)
 - [Visual Introduction to PyTorch](https://www.youtube.com/watch?v=G4UAQ6bxQzE)
 
-## Usage
+## Install
+
+**uv.lock** is intentionally left out provided that this is a playground project:
 
 ```
-$ uv sync                          # default deps (torch CPU)
-$ uv sync --group torch-std        # torch-std group (same as default)
-$ uv sync --group torch-xpu        # torch-xpu group + xpu index
+$ uv sync                                                            # CUDA 13.0 (https://pypi.org/simple/)
+$ uv sync --default-index https://download.pytorch.org/whl/cpu       # CPU
+$ uv sync --default-index https://download.pytorch.org/whl/cu130     # CUDA 13.0
+$ uv sync --default-index https://download.pytorch.org/whl/cu132     # CUDA 13.2
+$ uv sync --default-index https://download.pytorch.org/whl/xpu       # XPU
+```
+
+## Run
+
+```
 $ uv run main.py
+$ uv run mnist.py
 ```
 
 ## The 5-step deep learning recipe
